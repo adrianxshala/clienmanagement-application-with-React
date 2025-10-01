@@ -1,70 +1,193 @@
-# Getting Started with Create React App
+# User Management Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A simple and functional React application for managing user data, built as an internship project demonstration.
 
-## Available Scripts
+## Overview
 
-In the project directory, you can run:
+This application demonstrates core React concepts including component management, state handling, routing, form validation, and API integration. The app fetches user data from the JSONPlaceholder API and provides functionality to view, search, sort, and add users with a clean, responsive interface.
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **User Listing**: Displays users fetched from JSONPlaceholder API with name, email, and company information
+- **Real-time Search**: Filter users by name or email with instant results
+- **User Details**: Click on any user to view complete information including address, phone, and website
+- **Add New Users**: Form to add new users with name, email, and phone validation
+- **Update Users**: Edit user information directly from the user detail page
+- **Delete Users**: Remove users with confirmation dialog
+- **Sorting**: Sort users by name or email in ascending/descending order
+- **Responsive Design**: Clean, mobile-friendly interface using custom CSS
+- **Local Persistence**: Added users are stored in localStorage and persist between sessions
+- **Redux State Management**: Centralized state management for all user operations
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Technology Stack
 
-### `npm test`
+- **React 19.1.1**: Modern React with hooks for component logic
+- **Redux Toolkit**: State management for users, search, and sorting
+- **React Redux**: React bindings for Redux state management
+- **React Router DOM 7.9.3**: Client-side routing for navigation
+- **Fetch API**: For HTTP requests to JSONPlaceholder API
+- **Custom CSS**: Clean, responsive styling without external frameworks
+- **localStorage**: For persisting locally added users
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Project Structure
 
-### `npm run build`
+```
+src/
+├── store/              # Redux store configuration
+│   ├── index.js        # Store setup and configuration
+│   └── userSlice.js    # User state management slice
+├── components/         # Reusable UI components
+│   ├── AddUserForm.js  # User creation form component
+│   └── index.js        # Component exports
+├── pages/              # Main application pages
+│   ├── HomePage.js     # User listing and management page
+│   ├── UserDetailPage.js # User details and editing page
+│   └── index.js        # Page exports
+├── utils/              # Utility functions and constants
+│   ├── constants.js    # Application constants
+│   ├── localStorage.js # Local storage utilities
+│   ├── userUtils.js    # User-related utility functions
+│   └── index.js        # Utility exports
+├── assets/             # Static assets
+│   ├── index.css       # Global styles
+│   └── logo.svg        # Application logo
+├── App.js              # Main routing and layout with Redux Provider
+├── index.js            # Application entry point
+├── App.test.js         # Application tests
+├── reportWebVitals.js  # Performance monitoring
+└── setupTests.js       # Test configuration
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Architecture
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Component Organization
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **Pages**: Main application screens (HomePage, UserDetailPage)
+- **Components**: Reusable UI components (AddUserForm)
+- **Utils**: Pure utility functions and constants
+- **Store**: Redux state management configuration
 
-### `npm run eject`
+### Code Organization Principles
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- **Separation of Concerns**: Each folder has a specific responsibility
+- **Clean Imports**: Index files provide clean import paths
+- **Reusability**: Components and hooks are designed for reuse
+- **Maintainability**: Clear structure makes code easy to maintain and extend
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Installation & Setup
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+1. **Clone the repository**:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+   ```bash
+   git clone https://github.com/yourusername/linkplus-user-management.git
+   cd client
+   ```
 
-## Learn More
+2. **Install dependencies**:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+   ```bash
+   npm install
+   ```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+3. **Start the development server**:
 
-### Code Splitting
+   ```bash
+   npm start
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+4. **Open your browser** and navigate to `http://localhost:3000`
 
-### Analyzing the Bundle Size
+## How It Works
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Data Management
 
-### Making a Progressive Web App
+- **API Users**: Fetched from JSONPlaceholder API on application load
+- **Local Users**: Added through the form and stored in localStorage
+- **Combined View**: Both API and local users are displayed together
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### User Operations
 
-### Advanced Configuration
+- **Viewing**: Click any user card to see detailed information
+- **Searching**: Type in the search bar to filter users by name or email
+- **Sorting**: Use sort buttons to organize users alphabetically
+- **Adding**: Fill out the form to add new users (name and email required)
+- **Updating**: Click "Edit User" on the detail page to modify user information
+- **Deleting**: Click "Delete User" to remove users with confirmation
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### Data Persistence
 
-### Deployment
+- API users are fetched fresh on each page load
+- Locally added users persist in localStorage
+- User details page handles both API and local users appropriately
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## API Integration
 
-### `npm run build` fails to minify
+The application integrates with the JSONPlaceholder API for user data:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**Endpoint**: `https://jsonplaceholder.typicode.com/users`
+
+**User Object Structure**:
+
+```json
+{
+  "id": 1,
+  "name": "Leanne Graham",
+  "username": "Bret",
+  "email": "Sincere@april.biz",
+  "phone": "1-770-736-8031 x56442",
+  "website": "hildegard.org",
+  "address": {
+    "street": "Kulas Light",
+    "suite": "Apt. 556",
+    "city": "Gwenborough",
+    "zipcode": "92998-3874",
+    "geo": {
+      "lat": "-37.3159",
+      "lng": "81.1496"
+    }
+  },
+  "company": {
+    "name": "Romaguera-Crona",
+    "catchPhrase": "Multi-layered client-server neural-net",
+    "bs": "harness real-time e-markets"
+  }
+}
+```
+
+## Development
+
+### Available Scripts
+
+- `npm start`: Runs the app in development mode
+- `npm build`: Builds the app for production
+- `npm test`: Launches the test runner (includes basic unit tests)
+
+### Code Quality
+
+The project follows React best practices:
+
+- Functional components with hooks
+- Proper state management with Redux
+- Clean component separation
+- Responsive design principles
+- Error handling and loading states
+- Professional code formatting and structure
+
+## Browser Support
+
+This application works in all modern browsers that support:
+
+- ES6+ JavaScript features
+- CSS Grid and Flexbox
+- Fetch API
+- localStorage
+
+## Submission
+
+**Submission Date**: October 01, 2025
+
+Please send completion email to `office@linkplus-it.com` with the repository link.
+
+## License
+
+This project is created for educational and demonstration purposes.
