@@ -7,7 +7,7 @@ export const fetchUsers = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await api.get("/users");
-      
+
       // Load local users from localStorage
       const localUsers = JSON.parse(localStorage.getItem("localUsers") || "[]");
 
@@ -195,7 +195,9 @@ const usersSlice = createSlice({
       })
       .addCase(updateUserAPI.fulfilled, (state, action) => {
         state.loading = false;
-        const userIndex = state.users.findIndex((user) => user.id === action.payload.id);
+        const userIndex = state.users.findIndex(
+          (user) => user.id === action.payload.id
+        );
         if (userIndex !== -1) {
           state.users[userIndex] = action.payload;
         }
