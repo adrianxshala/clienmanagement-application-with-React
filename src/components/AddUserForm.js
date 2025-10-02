@@ -1,4 +1,22 @@
 import React, { useState } from "react";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Button,
+  Typography,
+  Box,
+  IconButton,
+  CircularProgress,
+} from "@mui/material";
+import {
+  Close as CloseIcon,
+  Person as PersonIcon,
+  Email as EmailIcon,
+  Phone as PhoneIcon,
+} from "@mui/icons-material";
 
 const AddUserForm = ({ onAddUser, onCancel }) => {
   const [formData, setFormData] = useState({
@@ -35,7 +53,7 @@ const AddUserForm = ({ onAddUser, onCancel }) => {
       [name]: value,
     }));
 
-    
+    // Clear error when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
@@ -54,9 +72,9 @@ const AddUserForm = ({ onAddUser, onCancel }) => {
     setIsSubmitting(true);
 
     try {
-      // Create a  user object
+      // Create a new user object
       const newUser = {
-        id: Date.now(), 
+        id: Date.now(),
         name: formData.name,
         email: formData.email,
         phone: formData.phone || "Not provided",
@@ -96,91 +114,103 @@ const AddUserForm = ({ onAddUser, onCancel }) => {
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal">
-        <div className="modal-header">
-          <h2 className="modal-title">Add New User</h2>
-          <button className="close-btn" onClick={onCancel}>
-            ×
-          </button>
-        </div>
+    <Dialog
+      open={true}
+      onClose={onCancel}
+      maxWidth="sm"
+      fullWidth
+      PaperProps={{
+        sx: {
+          borderRadius: 2,
+        },
+      }}
+    >
+      <DialogTitle>
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <Typography variant="h5" component="h2">
+            Add New User
+          </Typography>
+          <IconButton onClick={onCancel} size="small">
+            <CloseIcon />
+          </IconButton>
+        </Box>
+      </DialogTitle>
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <h3 style={{ marginBottom: "20px", color: "#2c3e50" }}>
-              Basic Information
-            </h3>
+      <DialogContent>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+          <Typography variant="h6" sx={{ mb: 3, color: "text.primary" }}>
+            Basic Information
+          </Typography>
 
-            <div className="form-group">
-              <label htmlFor="name" className="form-label">
-                Name <span style={{ color: "#e74c3c" }}>*</span>
-              </label>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                value={formData.name}
-                onChange={handleInputChange}
-                placeholder="Enter full name"
-                className={`form-input ${errors.name ? "error" : ""}`}
-              />
-              {errors.name && <p className="error-message">{errors.name}</p>}
-            </div>
+          <TextField
+            fullWidth
+            label="Name"
+            name="name"
+            value={formData.name}
+            onChange={handleInputChange}
+            placeholder="Enter full name"
+            error={!!errors.name}
+            helperText={errors.name}
+            required
+            InputProps={{
+              startAdornment: <PersonIcon sx={{ mr: 1, color: "text.secondary" }} />,
+            }}
+            sx={{ mb: 3 }}
+          />
 
-            <div className="form-group">
-              <label htmlFor="email" className="form-label">
-                Email <span style={{ color: "#e74c3c" }}>*</span>
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                placeholder="Enter email address"
-                className={`form-input ${errors.email ? "error" : ""}`}
-              />
-              {errors.email && <p className="error-message">{errors.email}</p>}
-            </div>
+          <TextField
+            fullWidth
+            label="Email"
+            name="email"
+            type="email"
+            value={formData.email}
+            onChange={handleInputChange}
+            placeholder="Enter email address"
+            error={!!errors.email}
+            helperText={errors.email}
+            required
+            InputProps={{
+              startAdornment: <EmailIcon sx={{ mr: 1, color: "text.secondary" }} />,
+            }}
+            sx={{ mb: 3 }}
+          />
 
-            <div className="form-group">
-              <label htmlFor="phone" className="form-label">
-                Phone
-              </label>
-              <input
-                id="phone"
-                name="phone"
-                type="tel"
-                value={formData.phone}
-                onChange={handleInputChange}
-                placeholder="Enter phone number"
-                className="form-input"
-              />
-            </div>
-          </div>
+          <TextField
+            fullWidth
+            label="Phone"
+            name="phone"
+            type="tel"
+            value={formData.phone}
+            onChange={handleInputChange}
+            placeholder="Enter phone number"
+            InputProps={{
+              startAdornment: <PhoneIcon sx={{ mr: 1, color: "text.secondary" }} />,
+            }}
+            sx={{ mb: 2 }}
+          />
+        </Box>
+      </DialogContent>
 
-          <div style={{ display: "flex", gap: "15px", marginTop: "30px" }}>
-            <button
-              type="button"
-              className="btn btn-outline"
-              onClick={onCancel}
-              disabled={isSubmitting}
-              style={{ flex: 1 }}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="btn"
-              disabled={isSubmitting}
-              style={{ flex: 1 }}
-            >
-              {isSubmitting ? "Adding..." : "Add User"}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+      <DialogActions sx={{ p: 3, pt: 1 }}>
+        <Button
+          variant="outlined"
+          onClick={onCancel}
+          disabled={isSubmitting}
+          sx={{ flex: 1 }}
+        >
+          Cancel
+        </Button>
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+          sx={{ flex: 1 }}
+          startIcon={isSubmitting ? <CircularProgress size={20} /> : null}
+        >
+          {isSubmitting ? "Adding..." : "Add User"}
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 

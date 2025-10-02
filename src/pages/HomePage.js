@@ -2,6 +2,26 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
+  Container,
+  Typography,
+  Button,
+  TextField,
+  Card,
+  CardContent,
+  Grid,
+  Box,
+  CircularProgress,
+  Alert,
+  Chip,
+  Paper,
+} from "@mui/material";
+import {
+  Add as AddIcon,
+  Search as SearchIcon,
+  Sort as SortIcon,
+  Clear as ClearIcon,
+} from "@mui/icons-material";
+import {
   fetchUsers,
   setSearchTerm,
   setSortBy,
@@ -96,125 +116,167 @@ const HomePage = () => {
 
   if (loading) {
     return (
-      <div className="loading">
-        <div className="spinner"></div>
-        <p>Loading users...</p>
-      </div>
+      <Container maxWidth="lg" sx={{ mt: 4, textAlign: "center" }}>
+        <CircularProgress size={60} />
+        <Typography variant="h6" sx={{ mt: 2 }}>
+          Loading users...
+        </Typography>
+      </Container>
     );
   }
 
   if (error) {
     return (
-      <div className="container">
-        <div className="card">
-          <div className="card-header">
-            <h2 style={{ color: "#e74c3c" }}>Error Loading Users</h2>
-          </div>
-          <p style={{ marginBottom: "20px", color: "#7f8c8d" }}>{error}</p>
-          <button className="btn" onClick={handleRetry}>
-            Try Again
-          </button>
-        </div>
-      </div>
+      <Container maxWidth="lg" sx={{ mt: 4 }}>
+        <Card>
+          <CardContent>
+            <Alert severity="error" sx={{ mb: 2 }}>
+              <Typography variant="h6" color="error">
+                Error Loading Users
+              </Typography>
+              <Typography variant="body2" sx={{ mt: 1 }}>
+                {error}
+              </Typography>
+            </Alert>
+            <Button variant="contained" onClick={handleRetry}>
+              Try Again
+            </Button>
+          </CardContent>
+        </Card>
+      </Container>
     );
   }
 
   return (
-    <div>
-      <div className="header">
-        <div className="container">
-          <h1>Users Directory</h1>
-          <button className="btn" onClick={() => setShowAddForm(true)}>
-            + Add New User
-          </button>
-        </div>
-      </div>
+    <Box>
+      {/* Header */}
+      <Paper elevation={2} sx={{ mb: 3 }}>
+        <Container maxWidth="lg">
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              py: 3,
+            }}
+          >
+            <Typography variant="h3" component="h1" color="primary">
+              Users Directory
+            </Typography>
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={() => setShowAddForm(true)}
+              size="large"
+            >
+              Add New User
+            </Button>
+          </Box>
+        </Container>
+      </Paper>
 
-      <div className="container">
-        <div className="search-container">
-          <input
-            type="text"
-            className="search-input"
+      <Container maxWidth="lg">
+        {/* Search Section */}
+        <Box sx={{ mb: 3 }}>
+          <TextField
+            fullWidth
+            variant="outlined"
             placeholder="Search users by name or email..."
             value={searchTerm}
             onChange={(e) => dispatch(setSearchTerm(e.target.value))}
+            InputProps={{
+              startAdornment: <SearchIcon sx={{ mr: 1, color: "text.secondary" }} />,
+            }}
+            sx={{ mb: 2 }}
           />
           {searchTerm && (
-            <p
-              style={{
-                textAlign: "center",
-                marginTop: "10px",
-                color: "#7f8c8d",
-              }}
-            >
-              {filteredUsers.length} user{filteredUsers.length !== 1 ? "s" : ""}{" "}
-              found
-            </p>
+            <Typography variant="body2" color="text.secondary" textAlign="center">
+              {filteredUsers.length} user{filteredUsers.length !== 1 ? "s" : ""} found
+            </Typography>
           )}
-        </div>
+        </Box>
 
-        <div className="sort-buttons">
-          <button
-            className={`btn ${
-              sortBy === "name" ? "" : "btn-outline"
-            } btn-small`}
+        {/* Sort Buttons */}
+        <Box sx={{ mb: 3, display: "flex", gap: 1, flexWrap: "wrap" }}>
+          <Button
+            variant={sortBy === "name" ? "contained" : "outlined"}
+            startIcon={<SortIcon />}
             onClick={() => handleSort("name")}
+            size="small"
           >
-            Sort by Name{" "}
-            {sortBy === "name" && (sortOrder === "asc" ? "↑" : "↓")}
-          </button>
-          <button
-            className={`btn ${
-              sortBy === "email" ? "" : "btn-outline"
-            } btn-small`}
+            Sort by Name {sortBy === "name" && (sortOrder === "asc" ? "↑" : "↓")}
+          </Button>
+          <Button
+            variant={sortBy === "email" ? "contained" : "outlined"}
+            startIcon={<SortIcon />}
             onClick={() => handleSort("email")}
+            size="small"
           >
-            Sort by Email{" "}
-            {sortBy === "email" && (sortOrder === "asc" ? "↑" : "↓")}
-          </button>
+            Sort by Email {sortBy === "email" && (sortOrder === "asc" ? "↑" : "↓")}
+          </Button>
           {sortBy && (
-            <button
-              className="btn btn-secondary btn-small"
+            <Button
+              variant="outlined"
+              color="secondary"
+              startIcon={<ClearIcon />}
               onClick={() => dispatch(clearSort())}
+              size="small"
             >
               Clear Sort
-            </button>
+            </Button>
           )}
-        </div>
+        </Box>
 
-        <div className="grid grid-3">
+        {/* Users Grid */}
+        <Grid container spacing={3}>
           {sortedUsers.length > 0 ? (
             sortedUsers.map((user) => (
-              <div
-                key={user.id}
-                className="card user-card"
-                onClick={() => handleUserClick(user.id)}
-              >
-                <div className="user-name">{user.name}</div>
-                <div className="user-email">{user.email}</div>
-                <div className="user-company">{user.company.name}</div>
-              </div>
+              <Grid item xs={12} sm={6} md={4} key={user.id}>
+                <Card
+                  sx={{
+                    cursor: "pointer",
+                    transition: "all 0.2s ease-in-out",
+                    "&:hover": {
+                      transform: "translateY(-4px)",
+                      boxShadow: 4,
+                    },
+                  }}
+                  onClick={() => handleUserClick(user.id)}
+                >
+                  <CardContent>
+                    <Typography variant="h6" component="h2" gutterBottom>
+                      {user.name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                      {user.email}
+                    </Typography>
+                    <Chip
+                      label={user.company.name}
+                      size="small"
+                      color="primary"
+                      variant="outlined"
+                    />
+                  </CardContent>
+                </Card>
+              </Grid>
             ))
           ) : (
-            <div
-              style={{
-                gridColumn: "1 / -1",
-                textAlign: "center",
-                padding: "40px",
-              }}
-            >
-              <p style={{ color: "#7f8c8d", fontSize: "18px" }}>
-                No users found matching "{searchTerm}"
-              </p>
-            </div>
+            <Grid item xs={12}>
+              <Box sx={{ textAlign: "center", py: 8 }}>
+                <Typography variant="h6" color="text.secondary">
+                  No users found matching "{searchTerm}"
+                </Typography>
+              </Box>
+            </Grid>
           )}
-        </div>
+        </Grid>
 
+        {/* Add User Form Modal */}
         {showAddForm && (
           <AddUserForm onAddUser={handleAddUser} onCancel={handleCancelAdd} />
         )}
-      </div>
-    </div>
+      </Container>
+    </Box>
   );
 };
 
