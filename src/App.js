@@ -6,7 +6,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { store } from "./store";
 import { HomePage, UserDetailPage } from "./pages";
 
-// Create a custom theme
+
 const theme = createTheme({
   palette: {
     primary: {

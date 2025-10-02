@@ -1,26 +1,26 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../utils/api";
 
-// Async thunk for fetching users from API
+//  fetching users 
 export const fetchUsers = createAsyncThunk(
   "users/fetchUsers",
   async (_, { rejectWithValue }) => {
     try {
       const response = await api.get("/users");
 
-      // Load local users from localStorage
+      
       const localUsers = JSON.parse(localStorage.getItem("localUsers") || "[]");
 
-      // Combine API users with local users
+     
       return [...localUsers, ...response.data];
     } catch (error) {
-      // Axios automatically throws errors for non-2xx responses
+     
       return rejectWithValue(error.response?.data?.message || error.message);
     }
   }
 );
 
-// Async thunk for creating a new user (for future API integration)
+
 export const createUser = createAsyncThunk(
   "users/createUser",
   async (userData, { rejectWithValue }) => {
@@ -33,7 +33,7 @@ export const createUser = createAsyncThunk(
   }
 );
 
-// Async thunk for updating a user (for future API integration)
+
 export const updateUserAPI = createAsyncThunk(
   "users/updateUserAPI",
   async ({ id, userData }, { rejectWithValue }) => {
@@ -46,7 +46,7 @@ export const updateUserAPI = createAsyncThunk(
   }
 );
 
-// Async thunk for deleting a user (for future API integration)
+
 export const deleteUserAPI = createAsyncThunk(
   "users/deleteUserAPI",
   async (id, { rejectWithValue }) => {
@@ -78,7 +78,7 @@ const usersSlice = createSlice({
     // Sort functionality
     setSortBy: (state, action) => {
       if (state.sortBy === action.payload) {
-        // Toggle sort order if same field
+      
         state.sortOrder = state.sortOrder === "asc" ? "desc" : "asc";
       } else {
         // Set new field and default to ascending

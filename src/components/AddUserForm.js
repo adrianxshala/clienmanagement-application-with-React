@@ -31,7 +31,7 @@ const AddUserForm = ({ onAddUser, onCancel }) => {
   const validateForm = () => {
     const newErrors = {};
 
-    // Required field validation
+    // Required  validation
     if (!formData.name.trim()) {
       newErrors.name = "Name is required";
     }
@@ -53,7 +53,7 @@ const AddUserForm = ({ onAddUser, onCancel }) => {
       [name]: value,
     }));
 
-    // Clear error when user starts typing
+    // Clear error
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,

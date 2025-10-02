@@ -12,7 +12,7 @@ export const localStorageUtils = {
     }
   },
 
-  // Save local users to localStorage
+  // Save local users 
   saveLocalUsers: (users) => {
     try {
       localStorage.setItem(LOCAL_USERS_KEY, JSON.stringify(users));

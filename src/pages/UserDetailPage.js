@@ -56,11 +56,11 @@ const UserDetailPage = () => {
       try {
         setLoading(true);
 
-        // Check if this is a local user (timestamp-based ID)
+       
         const userId = parseInt(id);
         const currentTime = Date.now();
 
-        // If ID is recent timestamp, it's a local user
+       
         if (userId > currentTime - 24 * 60 * 60 * 1000) {
           // Find in Redux store
           const localUser = users.find((u) => u.id === userId);
@@ -77,7 +77,7 @@ const UserDetailPage = () => {
             throw new Error("User not found");
           }
         } else {
-          // Find API user in Redux store
+          // Find API user 
           const apiUser = users.find((u) => u.id === userId);
 
           if (apiUser) {

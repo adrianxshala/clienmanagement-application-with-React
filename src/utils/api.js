@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-// Create axios instance with default configuration
+// Create axios 
 const api = axios.create({
   baseURL: 'https://jsonplaceholder.typicode.com',
   timeout: 10000, // 10 seconds timeout
@@ -9,19 +9,14 @@ const api = axios.create({
   },
 });
 
-// Request interceptor for logging and adding auth tokens
+
 api.interceptors.request.use(
   (config) => {
-    // Log request in development
+    // Log request
     if (process.env.NODE_ENV === 'development') {
       console.log(`🚀 ${config.method?.toUpperCase()} ${config.url}`);
     }
-    
-    // You can add auth tokens here if needed
-    // const token = localStorage.getItem('authToken');
-    // if (token) {
-    //   config.headers.Authorization = `Bearer ${token}`;
-    // }
+  
     
     return config;
   },
@@ -31,10 +26,10 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor for handling common errors
+
 api.interceptors.response.use(
   (response) => {
-    // Log response in development
+   
     if (process.env.NODE_ENV === 'development') {
       console.log(`✅ ${response.status} ${response.config.url}`);
     }
@@ -42,9 +37,9 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    // Handle common errors
+  
     if (error.response) {
-      // Server responded with error status
+      
       console.error('Response error:', error.response.status, error.response.data);
       
       switch (error.response.status) {
@@ -64,10 +59,10 @@ api.interceptors.response.use(
           console.error('An error occurred:', error.response.data);
       }
     } else if (error.request) {
-      // Request was made but no response received
+     
       console.error('Network error - please check your internet connection');
     } else {
-      // Something else happened
+      
       console.error('Error:', error.message);
     }
     
