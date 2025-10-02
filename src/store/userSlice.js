@@ -1,27 +1,60 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import api from "../utils/api";
 
 // Async thunk for fetching users from API
 export const fetchUsers = createAsyncThunk(
   "users/fetchUsers",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch(
-        "https://jsonplaceholder.typicode.com/users"
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const userData = await response.json();
-
+      const response = await api.get("/users");
       
+      // Load local users from localStorage
       const localUsers = JSON.parse(localStorage.getItem("localUsers") || "[]");
 
-      
-      return [...localUsers, ...userData];
+      // Combine API users with local users
+      return [...localUsers, ...response.data];
     } catch (error) {
-      return rejectWithValue(error.message);
+      // Axios automatically throws errors for non-2xx responses
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
+
+// Async thunk for creating a new user (for future API integration)
+export const createUser = createAsyncThunk(
+  "users/createUser",
+  async (userData, { rejectWithValue }) => {
+    try {
+      const response = await api.post("/users", userData);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
+
+// Async thunk for updating a user (for future API integration)
+export const updateUserAPI = createAsyncThunk(
+  "users/updateUserAPI",
+  async ({ id, userData }, { rejectWithValue }) => {
+    try {
+      const response = await api.put(`/users/${id}`, userData);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
+
+// Async thunk for deleting a user (for future API integration)
+export const deleteUserAPI = createAsyncThunk(
+  "users/deleteUserAPI",
+  async (id, { rejectWithValue }) => {
+    try {
+      await api.delete(`/users/${id}`);
+      return id;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || error.message);
     }
   }
 );
@@ -59,7 +92,7 @@ const usersSlice = createSlice({
       state.sortOrder = "asc";
     },
 
-    // Add user functionality
+    // Add user functionality (local only for now)
     addUser: (state, action) => {
       const newUser = action.payload;
       state.users.unshift(newUser); // Add to beginning of array
@@ -74,7 +107,7 @@ const usersSlice = createSlice({
       );
     },
 
-    // Update user functionality
+    // Update user functionality (local only for now)
     updateUser: (state, action) => {
       const { id, updatedData } = action.payload;
       const userIndex = state.users.findIndex((user) => user.id === id);
@@ -99,7 +132,7 @@ const usersSlice = createSlice({
       }
     },
 
-    // Delete user functionality
+    // Delete user functionality (local only for now)
     deleteUser: (state, action) => {
       const userId = action.payload;
       state.users = state.users.filter((user) => user.id !== userId);
@@ -127,6 +160,7 @@ const usersSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // Fetch users
       .addCase(fetchUsers.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -137,6 +171,51 @@ const usersSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchUsers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Create user
+      .addCase(createUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.users.unshift(action.payload);
+        state.error = null;
+      })
+      .addCase(createUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Update user
+      .addCase(updateUserAPI.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateUserAPI.fulfilled, (state, action) => {
+        state.loading = false;
+        const userIndex = state.users.findIndex((user) => user.id === action.payload.id);
+        if (userIndex !== -1) {
+          state.users[userIndex] = action.payload;
+        }
+        state.error = null;
+      })
+      .addCase(updateUserAPI.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Delete user
+      .addCase(deleteUserAPI.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteUserAPI.fulfilled, (state, action) => {
+        state.loading = false;
+        state.users = state.users.filter((user) => user.id !== action.payload);
+        state.error = null;
+      })
+      .addCase(deleteUserAPI.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
